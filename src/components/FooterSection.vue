@@ -1,10 +1,18 @@
 <script setup>
+import { useRouter, useRoute } from 'vue-router'
 import { MapPin, Mail, Phone, ArrowRight, Instagram, Facebook, Youtube, Linkedin } from 'lucide-vue-next'
 
+const router = useRouter()
+const route = useRoute()
+
 const scrollTo = (href) => {
-  const element = document.querySelector(href)
-  if (element) {
-    element.scrollIntoView({ behavior: 'smooth' })
+  if (route.path !== '/') {
+    router.push({ path: '/', hash: href })
+  } else {
+    const element = document.querySelector(href)
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' })
+    }
   }
 }
 </script>
@@ -18,7 +26,7 @@ const scrollTo = (href) => {
         
         <!-- Column 1: Brand Info -->
         <div>
-          <a href="#hero" @click.prevent="scrollTo('#hero')" class="flex items-center gap-3 mb-5">
+          <a href="#hero" @click.prevent="scrollTo('#hero')" class="flex items-center gap-3 mb-5 cursor-pointer">
             <div class="flex items-center justify-center transition-smooth">
               <img src="/images/logo-unbita.png" alt="Logo UNBITA" class="w-10 h-10 object-contain">
             </div>
@@ -60,27 +68,27 @@ const scrollTo = (href) => {
           </h4>
           <ul class="space-y-3 text-xs sm:text-sm">
             <li>
-              <a href="#hero" @click.prevent="scrollTo('#hero')" class="text-[#4B5563] hover:text-[#0056C2] font-medium transition-smooth">
+              <a href="#hero" @click.prevent="scrollTo('#hero')" class="text-[#4B5563] hover:text-[#0056C2] font-medium transition-smooth cursor-pointer">
                 Beranda Utama
               </a>
             </li>
             <li>
-              <a href="#tentang" @click.prevent="scrollTo('#tentang')" class="text-[#4B5563] hover:text-[#0056C2] font-medium transition-smooth">
+              <a href="#tentang" @click.prevent="scrollTo('#tentang')" class="text-[#4B5563] hover:text-[#0056C2] font-medium transition-smooth cursor-pointer">
                 Tentang & Esensi KKLP
               </a>
             </li>
             <li>
-              <a href="#wilayah" @click.prevent="scrollTo('#wilayah')" class="text-[#4B5563] hover:text-[#0056C2] font-medium transition-smooth">
+              <a href="#wilayah" @click.prevent="scrollTo('#wilayah')" class="text-[#4B5563] hover:text-[#0056C2] font-medium transition-smooth cursor-pointer">
                 Cakupan 9 Kecamatan
               </a>
             </li>
             <li>
-              <a href="#program" @click.prevent="scrollTo('#program')" class="text-[#4B5563] hover:text-[#0056C2] font-medium transition-smooth">
+              <a href="#program" @click.prevent="scrollTo('#program')" class="text-[#4B5563] hover:text-[#0056C2] font-medium transition-smooth cursor-pointer">
                 Fokus & Program Utama
               </a>
             </li>
             <li>
-              <a href="#kegiatan" @click.prevent="scrollTo('#kegiatan')" class="text-[#4B5563] hover:text-[#0056C2] font-medium transition-smooth">
+              <a href="#kegiatan" @click.prevent="scrollTo('#kegiatan')" class="text-[#4B5563] hover:text-[#0056C2] font-medium transition-smooth cursor-pointer">
                 Sambutan & Arahan Rektor
               </a>
             </li>

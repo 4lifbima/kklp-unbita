@@ -1,6 +1,10 @@
 <script setup>
 import { ref, computed } from 'vue'
+import { useRouter } from 'vue-router'
+import { programData } from '../data/program'
 import { Leaf, Store, HeartPulse, FileText, Building2, Scale, ArrowUpRight, Sparkles } from 'lucide-vue-next'
+
+const router = useRouter()
 
 const props = defineProps({
   onSelectProgram: Function
@@ -18,79 +22,27 @@ const categories = [
   { id: 'hukum', label: 'Hukum Bisnis' }
 ]
 
-const programList = [
-  {
-    id: 'p-1',
-    category: 'lingkungan',
-    categoryLabel: 'Lingkungan & Sanitasi',
-    sdgs: 'SDGs 6 & 13',
-    title: 'Konservasi Lingkungan & Bank Sampah',
-    description: 'Edukasi pemilahan sampah household, digitalisasi bank sampah kelurahan, dan perbaikan sanitasi lingkungan pemukiman.',
-    icon: Leaf,
-    image: '/images/kecamatan.png',
-    details: 'Program ini difokuskan pada pengelolaan sampah mandiri di tingkat kelurahan melalui pembentukan unit Bank Sampah, edukasi komposting rumah tangga, serta audit lingkungan untuk pencegahan banjir musiman di kawasan Kota Barat dan Dungingi.'
-  },
-  {
-    id: 'p-2',
-    category: 'umkm',
-    categoryLabel: 'Pemberdayaan UMKM',
-    sdgs: 'SDGs 8 & 9',
-    title: 'Digitalisasi & Kemasan Produk UMKM',
-    description: 'Pendampingan sertifikasi halal, pembuatan legalitas NIB, pemasaran digital via e-commerce, dan redesain kemasan produk unggulan.',
-    icon: Store,
-    image: '/images/hero.png',
-    details: 'Mahasiswa Fakultas Ekonomi & Bisnis UNBITA membantu pelaku UMKM lokal Gorontalo mendaftarkan NIB, sertifikasi halal BPJPH, memasarkan produk di marketplace digital, serta membuat foto katalog produk profesional.'
-  },
-  {
-    id: 'p-3',
-    category: 'stunting',
-    categoryLabel: 'Pencegahan Stunting',
-    sdgs: 'SDGs 3',
-    title: 'Posyandu Digital & Gizi Anak',
-    description: 'Pemetaan balita risiko stunting, edukasi gizi seimbang bagi ibu hamil, dan modernisasi pencatatan kesehatan Posyandu berbasis mobile.',
-    icon: HeartPulse,
-    image: '/images/story.png',
-    details: 'Kolaborasi lintas disiplin untuk pendataan digital antropometri balita, sosialisasi pemberian makanan tambahan (PMT) berbahan pangan lokal Gorontalo, dan pendampingan keluarga berisiko stunting.'
-  },
-  {
-    id: 'p-4',
-    category: 'administrasi',
-    categoryLabel: 'Administrasi Publik',
-    sdgs: 'SDGs 16',
-    title: 'Transparansi & E-Government Kelurahan',
-    description: 'Pengembangan sistem informasi pelayanan kelurahan, penataan arsip digital, dan simplifikasi alur pelayanan publik masyarakat.',
-    icon: FileText,
-    image: '/images/video_poster.png',
-    details: 'Peningkatan kapasitas staf kelurahan dalam pengelolaan portal publik, digitalisasi formulir pelayanan warga, serta survei kepuasan masyarakat (SKM) secara transparan.'
-  },
-  {
-    id: 'p-5',
-    category: 'infrastruktur',
-    categoryLabel: 'Infrastruktur & Ruang',
-    sdgs: 'SDGs 11',
-    title: 'Pemetaan Permukiman & Ruang Publik',
-    description: 'Pemetaan partisipatif berbasis GIS, perencanaan drainase lingkungan, dan redesain ruang terbuka hijau kelurahan.',
-    icon: Building2,
-    image: '/images/kecamatan.png',
-    details: 'Mahasiswa Teknik Sipil, Arsitektur, dan PWK UNBITA berkolaborasi membuat peta digital tata ruang kelurahan, desain konseptual RTH publik, serta evaluasi teknis kondisi jalan lorong dan saluran drainase.'
-  },
-  {
-    id: 'p-6',
-    category: 'hukum',
-    categoryLabel: 'Hukum Bisnis',
-    sdgs: 'SDGs 8',
-    title: 'Edukasi Legalitas & Perlindungan Usaha',
-    description: 'Penyuluhan hak kekayaan intelektual (HKI), pembuatan draf perjanjian usaha, dan konsultasi legalitas usaha mikro.',
-    icon: Scale,
-    image: '/images/hero.png',
-    details: 'Memberikan bantuan hukum awam bagi pemilik usaha mikro, pendampingan pendaftaran Merek Dagang HKI ke Kemenkumham, serta sosialisasi kesadaran hukum kontrak bagi komunitas usaha lokal.'
-  }
-]
+const iconMap = {
+  'p-1': Leaf,
+  'p-2': Store,
+  'p-3': HeartPulse,
+  'p-4': FileText,
+  'p-5': Building2,
+  'p-6': Scale
+}
 
 const filteredPrograms = computed(() => {
-  if (activeTab.value === 'all') return programList
-  return programList.filter(p => p.category === activeTab.value)
+  if (activeTab.value === 'all') return programData
+  return programData.filter(p => p.category === activeTab.value)
 })
+
+const handleCardClick = (prog) => {
+  if (props.onSelectProgram) {
+    props.onSelectProgram(prog)
+  } else if (prog.slug) {
+    router.push(`/program/${prog.slug}`)
+  }
+}
 </script>
 
 <template>
@@ -133,7 +85,7 @@ const filteredPrograms = computed(() => {
         <div
           v-for="prog in filteredPrograms"
           :key="prog.id"
-          @click="onSelectProgram && onSelectProgram(prog)"
+          @click="handleCardClick(prog)"
           class="group bg-white rounded-2xl border border-[#E5E7EB] overflow-hidden shadow-subtle hover:shadow-card hover:-translate-y-1 transition-all duration-300 cursor-pointer flex flex-col justify-between"
         >
           <!-- Image Header -->
@@ -150,7 +102,7 @@ const filteredPrograms = computed(() => {
             </div>
             
             <div class="absolute top-3 right-3 w-9 h-9 rounded-xl bg-[#0056C2] text-white flex items-center justify-center shadow-subtle">
-              <component :is="prog.icon" class="w-5 h-5" />
+              <component :is="iconMap[prog.id] || Leaf" class="w-5 h-5" />
             </div>
           </div>
 
@@ -164,12 +116,12 @@ const filteredPrograms = computed(() => {
                 {{ prog.title }}
               </h3>
               <p class="text-xs sm:text-sm text-[#4B5563] leading-relaxed line-clamp-3">
-                {{ prog.description }}
+                {{ prog.summary }}
               </p>
             </div>
 
             <div class="mt-6 pt-4 border-t border-[#E5E7EB] flex items-center justify-between">
-              <span class="text-xs font-semibold text-[#0B0F19]">Pelajari Pelaksanaan</span>
+              <span class="text-xs font-semibold text-[#0B0F19]">Baca Artikel Berita</span>
               <span class="text-xs font-bold text-[#0056C2] flex items-center gap-1 group-hover:translate-x-1 transition-transform">
                 Detail <ArrowUpRight class="w-4 h-4" />
               </span>

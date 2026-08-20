@@ -1,52 +1,23 @@
 <script setup>
+import { useRouter } from 'vue-router'
+import { wilayahData } from '../data/wilayah'
 import { MapPin, ArrowUpRight, Compass } from 'lucide-vue-next'
+
+const router = useRouter()
 
 const props = defineProps({
   onSelectKecamatan: Function
 })
 
-const popularKecamatanList = [
-  {
-    id: 'kota-barat',
-    name: 'Kota Barat',
-    city: 'Kota Gorontalo',
-    badge: 'KKLP 2026',
-    image: '/images/kecamatan.png',
-    description: 'Pusat kawasan Danau Limboto, konservasi lingkungan hidup & pemetaan sanitasi.',
-    kelurahanCount: 7,
-    focus: 'Sanitasi & Konservasi Danau'
-  },
-  {
-    id: 'kota-selatan',
-    name: 'Kota Selatan',
-    city: 'Kota Gorontalo',
-    badge: 'KKLP 2026',
-    image: '/images/hero.png',
-    description: 'Kawasan perdagangan, jasa pelabuhan, dan pengembangan digitalisasi UMKM.',
-    kelurahanCount: 5,
-    focus: 'Digitalisasi Pasar & Legalitas UMKM'
-  },
-  {
-    id: 'kota-tengah',
-    name: 'Kota Tengah',
-    city: 'Kota Gorontalo',
-    badge: 'KKLP 2026',
-    image: '/images/story.png',
-    description: 'Pusat pemerintahan kota, e-government kelurahan, dan penataan ruang permukiman.',
-    kelurahanCount: 6,
-    focus: 'E-Government & Penataan Permukiman'
-  },
-  {
-    id: 'dungingi',
-    name: 'Dungingi',
-    city: 'Kota Gorontalo',
-    badge: 'KKLP 2026',
-    image: '/images/video_poster.png',
-    description: 'Kawasan pertanian kota, peternakan lokal, dan edukasi pencegahan stunting.',
-    kelurahanCount: 5,
-    focus: 'Ketahanan Pangan & Bebas Stunting'
+const popularList = wilayahData.slice(0, 4)
+
+const handleCardClick = (kec) => {
+  if (props.onSelectKecamatan) {
+    props.onSelectKecamatan(kec)
+  } else if (kec.slug) {
+    router.push(`/wilayah/${kec.slug}`)
   }
-]
+}
 </script>
 
 <template>
@@ -70,6 +41,7 @@ const popularKecamatanList = [
 
         <a
           href="#wilayah"
+          @click.prevent="router.push('/#wilayah')"
           class="inline-flex items-center gap-2 text-[#0056C2] hover:text-[#003E8F] font-bold text-sm group transition-smooth"
         >
           <span>Jelajahi 9 Kecamatan</span>
@@ -80,9 +52,9 @@ const popularKecamatanList = [
       <!-- 4 Cards Grid -->
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         <div
-          v-for="kec in popularKecamatanList"
+          v-for="kec in popularList"
           :key="kec.id"
-          @click="onSelectKecamatan && onSelectKecamatan(kec)"
+          @click="handleCardClick(kec)"
           class="group bg-white rounded-2xl border border-[#E5E7EB] overflow-hidden shadow-subtle hover:shadow-card hover:-translate-y-1 transition-all duration-300 cursor-pointer flex flex-col justify-between"
         >
           <!-- Image Container -->
@@ -94,7 +66,6 @@ const popularKecamatanList = [
               loading="lazy"
             />
             
-            <!-- Solid Blue Badge -->
             <div class="absolute top-3 right-3 bg-[#0056C2] text-white text-[10px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">
               {{ kec.badge }}
             </div>
@@ -111,7 +82,7 @@ const popularKecamatanList = [
                 <span>{{ kec.city }}, Gorontalo</span>
               </div>
               <p class="text-xs text-[#4B5563] mt-3 leading-relaxed line-clamp-2">
-                {{ kec.description }}
+                {{ kec.summary || kec.focus }}
               </p>
             </div>
 
@@ -119,7 +90,7 @@ const popularKecamatanList = [
             <div class="mt-4 pt-3 border-t border-[#E5E7EB] flex items-center justify-between text-xs">
               <span class="font-bold text-[#0B0F19]">{{ kec.kelurahanCount }} Kelurahan</span>
               <span class="text-[#0056C2] font-bold group-hover:underline flex items-center gap-1">
-                Detail <ArrowUpRight class="w-3.5 h-3.5" />
+                Detail Berita <ArrowUpRight class="w-3.5 h-3.5" />
               </span>
             </div>
           </div>

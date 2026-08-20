@@ -1,6 +1,10 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import { Menu, X, ArrowRight } from 'lucide-vue-next'
+
+const router = useRouter()
+const route = useRoute()
 
 const isScrolled = ref(false)
 const isMobileMenuOpen = ref(false)
@@ -27,9 +31,13 @@ onUnmounted(() => {
 
 const scrollTo = (href) => {
   isMobileMenuOpen.value = false
-  const element = document.querySelector(href)
-  if (element) {
-    element.scrollIntoView({ behavior: 'smooth' })
+  if (route.path !== '/') {
+    router.push({ path: '/', hash: href })
+  } else {
+    const element = document.querySelector(href)
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' })
+    }
   }
 }
 </script>
@@ -46,7 +54,7 @@ const scrollTo = (href) => {
     <div class="max-w-[1180px] mx-auto px-5 sm:px-6 flex items-center justify-between">
       
       <!-- Brand Logo -->
-      <a href="#hero" @click.prevent="scrollTo('#hero')" class="flex items-center gap-3 group text-decoration-none">
+      <a href="#hero" @click.prevent="scrollTo('#hero')" class="flex items-center gap-3 group text-decoration-none cursor-pointer">
         <div class="flex items-center justify-center transition-smooth">
           <img src="/images/logo-unbita.png" alt="Logo UNBITA" class="w-10 h-10 object-contain">
         </div>
@@ -67,7 +75,7 @@ const scrollTo = (href) => {
           :key="link.name"
           :href="link.href"
           @click.prevent="scrollTo(link.href)"
-          class="text-sm font-semibold text-[#4B5563] hover:text-[#0056C2] transition-smooth relative py-1 hover:before:w-full before:w-0 before:h-0.5 before:bg-[#0056C2] before:absolute before:bottom-0 before:left-0 before:transition-all"
+          class="text-sm font-semibold text-[#4B5563] hover:text-[#0056C2] transition-smooth relative py-1 cursor-pointer hover:before:w-full before:w-0 before:h-0.5 before:bg-[#0056C2] before:absolute before:bottom-0 before:left-0 before:transition-all"
         >
           {{ link.name }}
         </a>
@@ -87,7 +95,7 @@ const scrollTo = (href) => {
         <!-- Mobile Menu Toggle -->
         <button
           @click="isMobileMenuOpen = !isMobileMenuOpen"
-          class="md:hidden p-2 rounded-xl text-[#0B0F19] hover:bg-[#F8FAFC] border border-[#E5E7EB] transition-smooth"
+          class="md:hidden p-2 rounded-xl text-[#0B0F19] hover:bg-[#F8FAFC] border border-[#E5E7EB] transition-smooth cursor-pointer"
           aria-label="Toggle navigation menu"
         >
           <Menu v-if="!isMobileMenuOpen" class="w-6 h-6" />
@@ -115,14 +123,14 @@ const scrollTo = (href) => {
             :key="link.name"
             :href="link.href"
             @click.prevent="scrollTo(link.href)"
-            class="text-base font-bold text-[#0B0F19] hover:text-[#0056C2] py-2 border-b border-[#F8FAFC]"
+            class="text-base font-bold text-[#0B0F19] hover:text-[#0056C2] py-2 border-b border-[#F8FAFC] cursor-pointer"
           >
             {{ link.name }}
           </a>
           <a
             href="#program"
             @click.prevent="scrollTo('#program')"
-            class="mt-2 w-full flex items-center justify-center gap-2 px-5 py-3 bg-[#0056C2] text-white font-bold rounded-xl text-center shadow-subtle"
+            class="mt-2 w-full flex items-center justify-center gap-2 px-5 py-3 bg-[#0056C2] text-white font-bold rounded-xl text-center shadow-subtle cursor-pointer"
           >
             <span>Lihat Program KKLP</span>
             <ArrowRight class="w-4 h-4" />
